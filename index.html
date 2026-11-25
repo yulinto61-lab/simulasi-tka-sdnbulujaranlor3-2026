@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TKA SIMULATION SDN BULUJARAN LOR III TAHUN 2026</title>
+<style>
+:root{--navy:#173b70;--blue:#2878d0;--sky:#eaf5ff;--gold:#ffbf47;--ink:#203047;--muted:#64748b;--green:#16845b;--red:#c74646}
+*{box-sizing:border-box}body{margin:0;background:#f2f7fc;color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+header{background:linear-gradient(120deg,#143665,#2878d0);color:white;padding:22px 16px;text-align:center}
+header h1{font-size:clamp(20px,4vw,30px);margin:0 0 6px;letter-spacing:.3px}header p{margin:0;color:#dbeafe}
+.wrap{max-width:1000px;margin:22px auto;padding:0 14px}.panel{background:white;border-radius:18px;padding:22px;box-shadow:0 8px 28px #173b7012;margin-bottom:16px}
+h2{margin:0 0 12px;color:var(--navy)}.muted{color:var(--muted)}label{display:block;font-weight:650;margin:12px 0 6px}
+input,select{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:10px;font:inherit}
+button{border:0;border-radius:11px;padding:12px 18px;font-weight:700;font-size:15px;cursor:pointer;background:var(--blue);color:white}
+button.secondary{background:#e7f0fb;color:var(--navy)}button.gold{background:var(--gold);color:#513500}button:disabled{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.row>*{flex:1}.hidden{display:none!important}
+.subjects{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:18px}
+.subject{border-radius:15px;padding:18px;background:var(--sky);border:1px solid #d5e9fb}.subject.math{background:#fff5df;border-color:#ffe4aa}
+.emoji{font-size:36px}.subject h3{margin:8px 0 4px}.subject p{margin:0 0 14px;color:var(--muted);font-size:14px}
+.topline{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.pill{background:#e8f1fb;color:var(--navy);padding:7px 11px;border-radius:30px;font-size:13px;font-weight:700}
+.progress{height:9px;background:#e7edf5;border-radius:10px;overflow:hidden;margin:12px 0 18px}.progress span{display:block;height:100%;background:var(--green);width:0}
+.question{font-size:19px;font-weight:750;line-height:1.5;margin:12px 0}
+.illustration{background:#f2f8ff;border:1px dashed #b6d4f2;border-radius:14px;padding:12px;text-align:center;margin:12px 0;font-size:44px}
+.options{display:grid;gap:9px;margin:16px 0}.option{border:1px solid #d7e0ea;background:white;color:var(--ink);text-align:left;font-weight:600}.option.selected{border:2px solid var(--blue);background:#edf6ff}
+.navgrid{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin-top:14px}.navgrid button{padding:7px 0;font-size:12px;background:#e8edf3;color:#334155}.navgrid button.done{background:#d9f3e8;color:#116443}.navgrid button.current{outline:2px solid var(--blue)}
+.result{text-align:center}.score{font-size:56px;font-weight:850;color:var(--green)}
+table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #e5eaf0;text-align:left}
+footer{text-align:center;color:var(--muted);padding:18px;font-size:13px}
+@media(max-width:600px){.panel{padding:16px}.navgrid{grid-template-columns:repeat(5,1fr)}.question{font-size:17px}}
+</style></head>
+<body>
+<header><h1>TKA SIMULATION SDN BULUJARAN LOR III TAHUN 2026</h1><p>Latihan Literasi dan Numerasi • Belajar dengan Ceria</p></header>
+<main class="wrap">
+<section id="home" class="panel">
+<h2>Selamat Datang, Calon Generasi Hebat! 🌟</h2>
+<p class="muted">Simulasi Tes Kemampuan Akademik untuk latihan Bahasa Indonesia dan Matematika. Pilih mata pelajaran, kerjakan soal, lalu lihat hasilnya.</p>
+<label for="student">Nama siswa</label><input id="student" placeholder="Masukkan nama lengkap siswa" maxlength="70">
+<label for="kelas">Kelas</label><select id="kelas"><option>Kelas 5</option><option selected>Kelas 6</option></select>
+<div class="subjects">
+<div class="subject"><div class="emoji">📚</div><h3>Bahasa Indonesia</h3><p>50 soal • Literasi dan pemahaman bacaan</p><button onclick="start('BI')">Mulai Bahasa Indonesia</button></div>
+<div class="subject math"><div class="emoji">🔢</div><h3>Matematika</h3><p>50 soal • Numerasi dan pemecahan masalah</p><button onclick="start('MTK')">Mulai Matematika</button></div>
+</div>
+<p class="muted">Setiap sesi mengambil soal secara acak dari bank soal. Urutan soal dan pilihan jawaban diacak kembali saat memulai sesi baru.</p>
+<div class="row"><button class="secondary" onclick="showResults()">📊 Lihat riwayat nilai di perangkat ini</button><button class="secondary" onclick="admin()">⚙️ Menu pengelola</button></div>
+</section>
+<section id="exam" class="panel hidden">
+<div class="topline"><span id="subjectTag" class="pill"></span><span id="studentTag" class="pill"></span><span class="pill">⏱ <span id="timer">00:00</span></span></div>
+<div class="progress"><span id="bar"></span></div>
+<div class="topline"><b id="count">Soal 1 dari 50</b><span class="muted">Pilih satu jawaban terbaik</span></div>
+<div id="visual" class="illustration hidden"></div><div id="passage" class="muted"></div>
+<div id="question" class="question"></div><div id="options" class="options"></div>
+<div class="row"><button class="secondary" onclick="prev()">← Sebelumnya</button><button class="gold" onclick="mark()">☆ Tandai</button><button onclick="next()">Berikutnya →</button></div>
+<div class="navgrid" id="navgrid"></div>
+<div class="row" style="margin-top:18px"><button class="secondary" onclick="home()">Simpan & keluar</button><button style="background:var(--green)" onclick="finish()">Selesaikan ujian</button></div>
+</section>
+<section id="result" class="panel hidden result">
+<h2>Hasil Simulasi</h2><div class="score" id="score">0</div><h3 id="resultTitle"></h3><p id="resultInfo" class="muted"></p>
+<div class="row"><button onclick="review()">Lihat pembahasan</button><button class="secondary" onclick="home()">Kembali ke beranda</button></div>
+<div id="reviewArea" style="text-align:left;margin-top:20px"></div>
+</section>
+<section id="results" class="panel hidden"><h2>Riwayat Nilai</h2><div id="history"></div><button class="secondary" onclick="home()">Kembali</button></section>
+<section id="adminPanel" class="panel hidden"><h2>Menu Pengelola Lokal</h2><p class="muted">Menu ini hanya untuk melihat ringkasan dan menghapus riwayat pada perangkat/browser ini. Ini bukan sistem admin online yang aman.</p><label>PIN pengelola (default: 2026)</label><input id="pin" type="password" placeholder="Masukkan PIN"><button onclick="adminLogin()">Masuk</button><div id="adminData"></div><button class="secondary" onclick="home()">Kembali</button></section>
+</main><footer>SDN BULUJARAN LOR III • TKA SIMULATION 2026</footer>
+<script>
+const BI = [
+["Bacalah: 'Dina menyiram bunga setiap pagi agar tanaman tetap segar.' Apa kegiatan Dina?","Dina menyiram bunga","Dina memetik buah","Dina membersihkan kelas","Dina membeli bunga",0,"🌷","Kalimat menyebutkan Dina menyiram bunga setiap pagi."],
+["Gagasan utama paragraf biasanya berisi ...","Ide pokok pembahasan","Nama penulis","Jumlah kalimat","Tanda baca",0,"📖","Gagasan utama adalah inti pembahasan paragraf."],
+["Sinonim kata 'rajin' adalah ...","Malas","Tekun","Lambat","Lalai",1,"✏️","Tekun memiliki makna hampir sama dengan rajin."],
+["Antonim kata 'tinggi' adalah ...","Besar","Panjang","Rendah","Luas",2,"📏","Lawan kata tinggi adalah rendah."],
+["Tanda baca yang tepat di akhir kalimat tanya adalah ...","Titik (.)","Koma (,)","Tanda seru (!)","Tanda tanya (?)",3,"❓","Kalimat tanya diakhiri tanda tanya."],
+["Kalimat ajakan yang tepat adalah ...","Ayo menjaga kebersihan kelas!","Kelas itu sangat luas.","Siapa nama gurumu?","Ibu sedang memasak.",0,"🧹","Kata 'ayo' menunjukkan ajakan."],
+["Kata baku yang tepat adalah ...","Apotik","Apotek","Apotick","Apoték",1,"🏥","Bentuk baku menurut KBBI adalah apotek."],
+["Penulisan huruf kapital yang benar adalah ...","andi tinggal di probolinggo.","Andi tinggal di Probolinggo.","Andi Tinggal di probolinggo.","andi Tinggal di Probolinggo.",1,"🏡","Nama orang dan tempat diawali huruf kapital."],
+["Tokoh utama dalam cerita adalah ...","Tokoh yang paling banyak berperan","Tokoh yang hanya muncul sekali","Penulis cerita","Pembaca cerita",0,"🎭","Tokoh utama menjadi pusat cerita."],
+["Pesan yang ingin disampaikan pengarang disebut ...","Latar","Amanat","Alur","Judul",1,"💡","Amanat adalah pesan dalam cerita."],
+["Bacalah: 'Hujan turun deras. Rudi memakai payung sebelum berangkat.' Mengapa Rudi memakai payung?","Agar tidak kehujanan","Agar lebih cepat","Agar terlihat tinggi","Agar tidak berjalan",0,"☔","Payung melindungi Rudi dari hujan."],
+["Kata hubung yang menyatakan sebab adalah ...","Tetapi","Karena","Atau","Lalu",1,"🔗","Karena menyatakan hubungan sebab."],
+["Kalimat efektif adalah kalimat yang ...","Bertele-tele","Jelas, tepat, dan hemat kata","Selalu panjang","Tidak memiliki subjek",1,"📝","Kalimat efektif menyampaikan gagasan secara jelas dan hemat."],
+["Bentuk jamak dari 'buku' pada kalimat 'Dua ... ada di meja' adalah ...","buku-buku","bukuan","perbukuan","membuku",0,"📚","Kata ulang dapat menyatakan jumlah banyak."],
+["Bagian awal surat resmi biasanya memuat ...","Kop surat","Daftar belanja","Cerita lucu","Tanda tangan saja",0,"✉️","Surat resmi memiliki kop surat."],
+["Tujuan iklan adalah ...","Menyampaikan informasi atau membujuk","Menyembunyikan informasi","Menulis cerita khayalan","Mencatat nilai",0,"📢","Iklan memberi informasi dan dapat mengajak pembaca."],
+["Bacalah: 'Sampah plastik sulit terurai. Karena itu, kita sebaiknya mengurangi penggunaannya.' Simpulan yang tepat ...","Plastik selalu aman","Penggunaan plastik perlu dikurangi","Sampah tidak perlu diurus","Semua sampah sama",1,"♻️","Simpulan sesuai isi kedua kalimat."],
+["Kalimat perintah yang santun adalah ...","Tutup pintu itu sekarang!","Tolong tutup pintu, ya.","Pintu itu berwarna cokelat.","Apakah pintu terbuka?",1,"🚪","Kata tolong membuat perintah lebih santun."],
+["Puisi tersusun atas baris dan ...","Bait","Bab","Paragraf panjang","Indeks",0,"🌼","Kumpulan baris puisi membentuk bait."],
+["Orang yang memberikan informasi saat wawancara disebut ...","Pewawancara","Narasumber","Pembaca","Penyunting",1,"🎤","Narasumber adalah orang yang diwawancarai."],
+["Bacalah: 'Pagi itu halaman sekolah tampak bersih. Para siswa memungut daun kering.' Suasana halaman sekolah adalah ...","Kotor","Bersih","Ramai kendaraan","Gelap",1,"🏫","Teks menyatakan halaman tampak bersih."],
+["Kata 'berlari' memiliki kata dasar ...","Lari","Berl","Ria","Larian",0,"🏃","Imbuhan ber- ditambahkan pada kata dasar lari."],
+["Kalimat yang menggunakan tanda koma dengan tepat adalah ...","Ibu membeli beras, gula, dan telur.","Ibu, membeli beras gula dan telur.","Ibu membeli, beras gula dan telur.","Ibu membeli beras gula dan, telur.",0,"🛒","Koma memisahkan unsur dalam perincian."],
+["Laporan hasil pengamatan sebaiknya berdasarkan ...","Dugaan semata","Fakta yang diamati","Cerita teman","Keinginan penulis",1,"🔍","Laporan pengamatan harus faktual."],
+["Bacalah: 'Lebah membantu penyerbukan bunga.' Makna kata penyerbukan adalah ...","Proses bertemunya serbuk sari dengan putik","Proses daun mengering","Proses akar menyerap air","Proses buah dipetik",0,"🐝","Penyerbukan membantu tumbuhan berkembang biak."],
+["Judul yang tepat untuk teks tentang cara menanam cabai adalah ...","Liburan ke Pantai","Langkah Menanam Cabai","Kisah Kucing","Pertandingan Sepak Bola",1,"🌶️","Judul harus mewakili isi teks."],
+["Kata depan yang tepat: 'Ayah bekerja ... kantor.'","di","ke","dari","pada",0,"🏢","Di menunjukkan tempat."],
+["Kalimat fakta adalah ...","Menurutku bakso paling enak","Bumi mengelilingi Matahari","Warna biru paling indah","Hari ini terasa menyenangkan",1,"🌍","Pernyataan dapat dibuktikan secara ilmiah."],
+["Kalimat opini ditandai oleh ...","Data pasti","Pendapat atau penilaian","Hasil pengukuran","Tanggal kejadian",1,"💬","Opini merupakan pendapat seseorang."],
+["Bacalah: 'Siti menabung setiap minggu. Setelah enam bulan, uangnya cukup untuk membeli sepeda.' Sikap Siti adalah ...","Boros","Tekun dan hemat","Pemarah","Ceroboh",1,"🚲","Menabung rutin menunjukkan sikap tekun dan hemat."],
+["Urutan yang tepat membuat teh: (1) aduk, (2) masukkan teh, (3) tuang air panas, (4) tambahkan gula.","2-3-4-1","1-2-3-4","4-1-2-3","3-1-4-2",0,"🍵","Masukkan teh, tuang air, tambahkan gula, lalu aduk."],
+["Kata yang tepat untuk melengkapi: 'Adik ... karena terjatuh.'","tertawa","menangis","menyanyi","menari",1,"🧒","Menangis sesuai sebab terjatuh."],
+["Peribahasa 'besar pasak daripada tiang' berarti ...","Pengeluaran lebih besar daripada pendapatan","Rumah sangat besar","Suka membantu","Rajin belajar",0,"🏠","Peribahasa menggambarkan pengeluaran berlebihan."],
+["Kalimat langsung ditandai dengan penggunaan ...","Tanda petik","Tanda kurung siku","Garis miring","Tanda hubung saja",0,"🗨️","Kalimat langsung menggunakan tanda petik."],
+["Bentuk baku kata 'ijin' adalah ...","Ijin","Izin","Izjin","Ejin",1,"📘","Bentuk bakunya adalah izin."],
+["Bacalah: 'Hutan menjadi tempat hidup berbagai hewan. Jika hutan rusak, hewan kehilangan tempat tinggal.' Ide pokoknya ...","Hutan sebagai habitat hewan","Hewan suka bermain","Semua hutan rusak","Hewan tinggal di rumah",0,"🌳","Kalimat pertama menyatakan ide pokok."],
+["Tujuan membaca petunjuk penggunaan adalah ...","Mengetahui cara menggunakan sesuatu","Menghafal nama penulis","Mencari tokoh cerita","Menentukan rima",0,"📋","Petunjuk memberi langkah penggunaan."],
+["Kata serapan yang benar adalah ...","Aktifitas","Aktivitas","Aktipitas","Aktifitaz",1,"⚡","Bentuk baku adalah aktivitas."],
+["Kalimat yang menunjukkan perbandingan adalah ...","Rumah Ani lebih luas daripada rumah Budi.","Ani membaca buku.","Budi pergi ke sekolah.","Ibu memasak nasi.",0,"🏘️","Kata lebih ... daripada menunjukkan perbandingan."],
+["Sebelum menyampaikan pendapat dalam diskusi, sebaiknya ...","Memotong pembicaraan","Mengangkat tangan dan menunggu giliran","Berteriak","Meninggalkan ruangan",1,"🙋","Diskusi memerlukan sikap santun dan tertib."],
+["Bacalah: 'Pohon mangga di halaman berbuah lebat. Buahnya berwarna hijau kekuningan.' Informasi tersurat adalah ...","Pohon mangga berbuah lebat","Pohon itu ditebang","Buahnya berwarna merah","Pohon tumbuh di hutan",0,"🥭","Informasi tersebut tertulis langsung pada teks."],
+["Kata 'mereka' termasuk ...","Kata ganti","Kata bilangan","Kata depan","Kata seru",0,"👫","Mereka adalah kata ganti orang ketiga jamak."],
+["Kalimat yang tepat untuk undangan ulang tahun adalah ...","Datanglah ke acara ulang tahunku hari Sabtu.","Dilarang masuk selamanya.","Tolong kerjakan PR.","Saya membeli pensil.",0,"🎂","Kalimat tersebut mengundang seseorang."],
+["Akhiran -kan pada kata 'bersihkan' membentuk kata ...","Perintah","Tanya","Seru","Sambung",0,"🧽","Bersihkan merupakan bentuk perintah."],
+["Bacalah: 'Meskipun lelah, para peserta tetap bersemangat menyelesaikan lomba.' Makna kata meskipun adalah ...","Sebab","Walaupun","Kemudian","Supaya",1,"🏅","Meskipun bermakna walaupun."],
+["Salah satu ciri teks prosedur adalah ...","Berisi langkah-langkah","Berisi tokoh dan konflik saja","Berisi pantun","Berisi daftar nama tokoh",0,"🪜","Teks prosedur menjelaskan tahapan melakukan sesuatu."],
+["Kalimat penutup pidato yang santun adalah ...","Demikian yang dapat saya sampaikan, terima kasih.","Sudah, saya pergi.","Kalian harus diam.","Tidak usah mendengarkan.",0,"🎙️","Penutup pidato menyampaikan terima kasih dengan santun."],
+["Bacalah: 'Air bersih harus digunakan dengan bijak. Matikan keran setelah selesai.' Ajakan teks tersebut adalah ...","Menghemat air","Membeli keran","Membuang air","Membiarkan keran terbuka",0,"💧","Teks mengajak menggunakan air secara bijak."],
+["Kata ulang pada kalimat 'Anak-anak bermain di taman' adalah ...","Anak-anak","bermain","di","taman",0,"🛝","Anak-anak merupakan kata ulang."],
+["Kalimat yang menggunakan kata baku adalah ...","Kami antre dengan tertib.","Kami antri dengan tertib.","Kami ngantri tertib.","Kami anter dengan tertib.",0,"🚶","Bentuk baku adalah antre."]
+];
+const MTK = [
+["Hasil dari 245 + 138 adalah ...","373","383","393","403",1,"➕","245 + 138 = 383."],
+["Hasil dari 700 − 268 adalah ...","422","432","442","452",1,"➖","700 − 268 = 432."],
+["Hasil dari 24 × 6 adalah ...","124","134","144","154",2,"✖️","24 × 6 = 144."],
+["Hasil dari 144 ÷ 12 adalah ...","10","11","12","13",2,"➗","144 dibagi 12 sama dengan 12."],
+["Nilai tempat angka 7 pada bilangan 5.732 adalah ...","Satuan","Puluhan","Ratusan","Ribuan",2,"🔢","Angka 7 menempati tempat ratusan."],
+["Pecahan yang senilai dengan 1/2 adalah ...","2/3","2/4","3/5","4/6",1,"🍕","1/2 dikalikan 2/2 menjadi 2/4."],
+["3/4 + 1/4 = ...","1/2","1","1 1/4","2",1,"🥧","Penyebut sama: 3/4 + 1/4 = 4/4 = 1."],
+["2/3 dari 18 adalah ...","6","9","12","15",2,"🍊","18 × 2/3 = 12."],
+["25% dari 200 adalah ...","25","40","50","75",2,"💯","25% × 200 = 50."],
+["Keliling persegi dengan sisi 8 cm adalah ...","16 cm","24 cm","32 cm","64 cm",2,"⬜","Keliling persegi = 4 × sisi = 32 cm."],
+["Luas persegi panjang panjang 12 cm dan lebar 5 cm adalah ...","17 cm²","34 cm²","60 cm²","120 cm²",2,"▭","Luas = 12 × 5 = 60 cm²."],
+["Sebuah segitiga memiliki alas 10 cm dan tinggi 6 cm. Luasnya ...","16 cm²","30 cm²","60 cm²","80 cm²",1,"🔺","Luas segitiga = 1/2 × 10 × 6 = 30 cm²."],
+["1 meter sama dengan ...","10 cm","100 cm","1.000 cm","10.000 cm",1,"📏","1 meter = 100 sentimeter."],
+["2,5 kilogram sama dengan ...","25 gram","250 gram","2.500 gram","25.000 gram",2,"⚖️","1 kg = 1.000 gram, jadi 2,5 kg = 2.500 gram."],
+["3 jam 15 menit sama dengan ... menit","185","190","195","205",2,"🕒","3 × 60 + 15 = 195 menit."],
+["Pukul 07.25 ditambah 40 menit menjadi ...","07.55","08.05","08.15","08.25",1,"⏰","07.25 + 40 menit = 08.05."],
+["Pola bilangan 4, 8, 12, 16, ... berikutnya adalah ...","18","20","22","24",1,"🔁","Pola bertambah 4."],
+["Rata-rata dari 6, 8, dan 10 adalah ...","7","8","9","10",1,"📊","(6 + 8 + 10) ÷ 3 = 8."],
+["Modus dari 3, 4, 4, 5, 6 adalah ...","3","4","5","6",1,"📈","Angka 4 paling sering muncul."],
+["Bilangan prima berikut adalah ...","9","15","17","21",2,"🔍","17 hanya memiliki faktor 1 dan 17."],
+["KPK dari 4 dan 6 adalah ...","8","10","12","24",2,"🧮","Kelipatan persekutuan terkecil adalah 12."],
+["FPB dari 18 dan 24 adalah ...","3","6","9","12",1,"🧩","Faktor persekutuan terbesar 18 dan 24 adalah 6."],
+["Urutan dari terkecil: 0,7; 0,5; 0,9 adalah ...","0,5; 0,7; 0,9","0,9; 0,7; 0,5","0,7; 0,5; 0,9","0,5; 0,9; 0,7",0,"🔢","Urutan naik: 0,5 lalu 0,7 lalu 0,9."],
+["Bentuk desimal dari 3/10 adalah ...","0,03","0,3","3,0","30,0",1,"🔟","Tiga per sepuluh ditulis 0,3."],
+["Hasil 1,25 + 2,5 adalah ...","3,25","3,50","3,75","4,00",2,"➕","1,25 + 2,50 = 3,75."],
+["Sebuah kubus memiliki ... rusuk","8","10","12","14",2,"🧊","Kubus memiliki 12 rusuk."],
+["Banyak sisi pada balok adalah ...","4","6","8","12",1,"📦","Balok memiliki 6 sisi."],
+["Volume kubus dengan rusuk 4 cm adalah ...","16 cm³","32 cm³","64 cm³","96 cm³",2,"🧊","Volume = 4 × 4 × 4 = 64 cm³."],
+["Volume balok 8 cm × 5 cm × 3 cm adalah ...","40 cm³","80 cm³","120 cm³","160 cm³",2,"📦","Volume = p × l × t = 120 cm³."],
+["Keliling persegi panjang 9 cm × 4 cm adalah ...","13 cm","18 cm","26 cm","36 cm",2,"▭","Keliling = 2 × (9 + 4) = 26 cm."],
+["Sudut siku-siku besarnya ... derajat","45","60","90","180",2,"📐","Sudut siku-siku besarnya 90 derajat."],
+["Bangun datar yang memiliki tiga sisi adalah ...","Persegi","Segitiga","Lingkaran","Persegi panjang",1,"🔺","Segitiga memiliki tiga sisi."],
+["Jika 5 buku berharga Rp30.000, harga 1 buku adalah ...","Rp5.000","Rp6.000","Rp7.000","Rp8.000",1,"📚","30.000 ÷ 5 = 6.000."],
+["Ibu membeli 3 kg apel seharga Rp18.000/kg. Total harga ...","Rp36.000","Rp48.000","Rp54.000","Rp60.000",2,"🍎","3 × Rp18.000 = Rp54.000."],
+["Uang Rp100.000 dibelanjakan Rp67.500. Kembaliannya ...","Rp22.500","Rp32.500","Rp42.500","Rp52.500",1,"💵","100.000 − 67.500 = 32.500."],
+["Jarak 120 km ditempuh dalam 3 jam. Kecepatan rata-rata ...","30 km/jam","40 km/jam","50 km/jam","60 km/jam",1,"🚗","Kecepatan = jarak ÷ waktu = 40 km/jam."],
+["Skala peta 1:100.000. Jarak peta 3 cm mewakili ...","300 m","1 km","3 km","30 km",2,"🗺️","3 × 100.000 cm = 300.000 cm = 3 km."],
+["Ada 36 siswa dibagi menjadi 4 kelompok sama banyak. Tiap kelompok ...","8","9","10","12",1,"👧","36 ÷ 4 = 9 siswa."],
+["Perbandingan 2 : 3 memiliki jumlah bagian ...","3","4","5","6",2,"⚖️","2 + 3 = 5 bagian."],
+["Jika 4 pensil seharga Rp8.000, harga 7 pensil ...","Rp12.000","Rp14.000","Rp16.000","Rp18.000",1,"✏️","Harga satu pensil Rp2.000; 7 pensil Rp14.000."],
+["Besar sudut lurus adalah ...","90°","120°","180°","360°",2,"📐","Sudut lurus besarnya 180 derajat."],
+["Bilangan Romawi XIV bernilai ...","12","13","14","16",2,"🏛️","XIV = 10 + 4 = 14."],
+["Hasil 6² adalah ...","12","18","36","64",2,"²","6 kuadrat = 6 × 6 = 36."],
+["Akar kuadrat dari 81 adalah ...","7","8","9","10",2,"√","9 × 9 = 81."],
+["Sebuah taman berbentuk persegi memiliki keliling 40 m. Panjang sisinya ...","8 m","10 m","12 m","20 m",1,"🌳","Sisi = 40 ÷ 4 = 10 m."],
+["Data nilai: 70, 80, 80, 90. Median data tersebut adalah ...","75","80","85","90",1,"📊","Dua nilai tengah 80 dan 80, mediannya 80."],
+["Peluang muncul angka pada sebuah koin seimbang adalah ...","0","1/4","1/2","1",2,"🪙","Ada dua sisi sama mungkin; peluang angka 1/2."],
+["Sebuah bak berisi 15 liter air. Ditambah 7,5 liter menjadi ...","20 liter","21,5 liter","22,5 liter","23 liter",2,"🚰","15 + 7,5 = 22,5 liter."],
+["Ibu memiliki pita 2 meter. Dipakai 75 cm. Sisa pita ...","75 cm","100 cm","125 cm","150 cm",2,"🎀","2 m = 200 cm; 200 − 75 = 125 cm."],
+["Dalam satu kelas ada 18 siswa perempuan dan 12 laki-laki. Jumlah seluruh siswa ...","28","30","32","36",1,"🏫","18 + 12 = 30 siswa."]
+];
+let subject='',items=[],answers={},marked={},index=0,seconds=0,tick=null,lastResult=null;
+const $=id=>document.getElementById(id);
+function shuffle(a){let b=[...a];for(let i=b.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
+function hideAll(){['home','exam','result','results','adminPanel'].forEach(x=>$(x).classList.add('hidden'))}
+function home(){if(tick)clearInterval(tick);hideAll();$('home').classList.remove('hidden')}
+function start(s){let name=$('student').value.trim();if(!name){alert('Masukkan nama siswa terlebih dahulu.');$('student').focus();return}
+subject=s;let bank=s==='BI'?BI:MTK;items=shuffle(bank).map(q=>{let opts=q.slice(1,5).map((v,i)=>({v,correct:i===q[5]}));return {...q,opts:shuffle(opts)}});answers={};marked={};index=0;seconds=0;
+$('subjectTag').textContent=s==='BI'?'Bahasa Indonesia':'Matematika';$('studentTag').textContent=name+' • '+$('kelas').value;
+hideAll();$('exam').classList.remove('hidden');render();if(tick)clearInterval(tick);tick=setInterval(()=>{seconds++;$('timer').textContent=fmt(seconds)},1000)}
+function fmt(n){return String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0')}
+function render(){let q=items[index];$('count').textContent=`Soal ${index+1} dari ${items.length}`;$('bar').style.width=((index+1)/items.length*100)+'%';$('question').textContent=q[0];$('visual').textContent=q[6];$('visual').classList.remove('hidden');$('passage').textContent='';
+let box=$('options');box.innerHTML='';q.opts.forEach((o,i)=>{let b=document.createElement('button');b.className='option'+(answers[index]===i?' selected':'');b.textContent=String.fromCharCode(65+i)+'. '+o.v;b.onclick=()=>{answers[index]=i;render()};box.appendChild(b)});
+let nav=$('navgrid');nav.innerHTML='';items.forEach((_,i)=>{let b=document.createElement('button');b.textContent=i+1;if(answers[i]!==undefined)b.classList.add('done');if(i===index)b.classList.add('current');if(marked[i])b.textContent+='★';b.onclick=()=>{index=i;render()};nav.appendChild(b)})}
+function prev(){if(index>0){index--;render()}}function next(){if(index<items.length-1){index++;render()}else alert('Ini soal terakhir. Periksa jawaban atau pilih Selesaikan ujian.')}
+function mark(){marked[index]=!marked[index];render()}
+function finish(){let unanswered=items.length-Object.keys(answers).length;if(unanswered&&!confirm(`Masih ada ${unanswered} soal belum dijawab. Tetap selesaikan?`))return;if(!confirm('Yakin ingin mengakhiri simulasi?'))return;
+clearInterval(tick);let correct=0;items.forEach((q,i)=>{if(answers[i]!==undefined&&q.opts[answers[i]].correct)correct++});let score=Math.round(correct/items.length*100);
+lastResult={name:$('student').value.trim(),kelas:$('kelas').value,subject,correct,total:items.length,score,duration:fmt(seconds),date:new Date().toLocaleString('id-ID'),details:items.map((q,i)=>({q:q[0],opts:q.opts.map(o=>o.v),chosen:answers[i]===undefined?null:q.opts[answers[i]].v,correct:q.opts.find(o=>o.correct).v,explain:q[7],right:answers[i]!==undefined&&q.opts[answers[i]].correct}))};
+let hist=JSON.parse(localStorage.getItem('tkaHistory')||'[]');hist.unshift(lastResult);localStorage.setItem('tkaHistory',JSON.stringify(hist.slice(0,200)));
+hideAll();$('result').classList.remove('hidden');$('score').textContent=score;$('resultTitle').textContent=score>=80?'Hebat! Pertahankan prestasimu! 🎉':score>=60?'Bagus! Terus berlatih! 💪':'Tetap semangat, ayo belajar lagi! 🌱';$('resultInfo').textContent=`${lastResult.name} • ${subject==='BI'?'Bahasa Indonesia':'Matematika'} • Benar ${correct} dari ${items.length} • Waktu ${fmt(seconds)}`;$('reviewArea').innerHTML=''}
+function review(){if(!lastResult)return;let area=$('reviewArea');area.innerHTML='<h3>Pembahasan soal</h3>'+lastResult.details.map((d,i)=>`<div style="border-top:1px solid #e5eaf0;padding:12px 0"><b>${i+1}. ${esc(d.q)}</b><p>Jawabanmu: ${esc(d.chosen||'Belum dijawab')} ${d.right?'✓':'✗'}</p><p>Jawaban benar: <b>${esc(d.correct)}</b></p><small class="muted">${esc(d.explain)}</small></div>`).join('')}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function showResults(){hideAll();$('results').classList.remove('hidden');let h=JSON.parse(localStorage.getItem('tkaHistory')||'[]');$('history').innerHTML=h.length?'<table><tr><th>Nama</th><th>Mapel</th><th>Nilai</th><th>Tanggal</th></tr>'+h.map(r=>`<tr><td>${esc(r.name)}</td><td>${r.subject==='BI'?'Bahasa Indonesia':'Matematika'}</td><td>${r.score}</td><td>${esc(r.date)}</td></tr>`).join('')+'</table>':'<p>Belum ada riwayat nilai di perangkat ini.</p>'}
+function admin(){hideAll();$('adminPanel').classList.remove('hidden');$('adminData').innerHTML=''}
+function adminLogin(){if($('pin').value!=='2026'){alert('PIN salah.');return}let h=JSON.parse(localStorage.getItem('tkaHistory')||'[]');$('adminData').innerHTML=`<h3>Ringkasan perangkat</h3><p>Total hasil tersimpan: <b>${h.length}</b></p><button class="secondary" onclick="showResults()">Lihat riwayat</button> <button style="background:var(--red)" onclick="clearHistory()">Hapus seluruh riwayat</button><p class="muted">PIN bawaan dapat dilihat pada panduan. Ganti kode di file HTML sebelum dibagikan jika diperlukan.</p>`}
+function clearHistory(){if(confirm('Hapus seluruh riwayat nilai pada browser ini?')){localStorage.removeItem('tkaHistory');$('adminData').innerHTML='<p>Riwayat telah dihapus dari browser ini.</p>'}}
+</script></body></html>
